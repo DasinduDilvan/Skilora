@@ -1,0 +1,48 @@
+/* ============================================================
+   ANALYTICS / STATS
+============================================================ */
+.stats-section {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  padding: 64px 0;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+}
+
+.stat-item {
+  text-align: center;
+  color: #fff;
+}
+.stat-item h3 {
+  font-size: 40px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  line-height: 1.1;
+}
+.stat-item p {
+  font-size: 16px;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+@media (max-width: 1024px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+  }
+}
+
+@media (max-width: 768px) {
+  .stat-item h3 {
+    font-size: 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
