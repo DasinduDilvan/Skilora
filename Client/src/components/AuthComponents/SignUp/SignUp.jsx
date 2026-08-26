@@ -1,21 +1,18 @@
+// src/components/AuthComponents/SignUp/SignUp.jsx
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { registerUser } from '../../../services/authService';
+import { useAuth } from '../../../context/AuthContext'; // <-- LIVE AUTH
 import './SignUp.css';
 
 const initialForm = {
-  firstName: '',
-  lastName: '',
-  email: '',
-  phone: '',
-  primarySkill: '',
-  password: '',
-  confirmPassword: '',
-  terms: false,
+  firstName: '', lastName: '', email: '', phone: '',
+  primarySkill: '', password: '', confirmPassword: '', terms: false,
 };
 
 const SignUp = () => {
   const navigate = useNavigate();
+  const { signup } = useAuth(); // <-- Get signup function
+  
   const [role, setRole] = useState('client');
   const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState({});
@@ -59,8 +56,6 @@ const SignUp = () => {
       newErrors.password = 'Password must be at least 8 characters.';
     if (form.password !== form.confirmPassword)
       newErrors.confirmPassword = 'Passwords do not match.';
-    if (role === 'freelancer' && !form.primarySkill)
-      newErrors.primarySkill = 'Please select your primary skill.';
     if (!form.terms) newErrors.terms = 'You must accept the terms.';
     return newErrors;
   };
@@ -78,16 +73,29 @@ const SignUp = () => {
 
     setSubmitting(true);
     try {
-      const res = await registerUser({ ...form, role });
-      if (res.success) {
-        setAlert({ type: 'success', message: '🎉 Account created successfully! Redirecting...' });
-        setTimeout(() => navigate('/auth/signin'), 1500);
-      } else {
-        setAlert({ type: 'error', message: res.message || 'Registration failed.' });
-        setSubmitting(false);
-      }
+      // Generate a username safely for the backend
+      const autoUsername = form.email.split('@')[0].replace(/[^a-zA-Z0-9]/g, '') + Math.floor(Math.random() * 1000);
+
+      const payload = {
+        firstName: form.firstName,
+        lastName: form.lastName,
+        email: form.email,
+        password: form.password,
+        phone: form.phone,
+        role: role,
+        username: autoUsername
+      };
+
+      await signup(payload);
+      
+      setAlert({ type: 'success', message: '🎉 Account created successfully! Redirecting...' });
+      setTimeout(() => navigate(`/${role}/dashboard`), 1500);
+
     } catch (err) {
-      setAlert({ type: 'error', message: 'Something went wrong. Please try again.' });
+      setAlert({ 
+        type: 'error', 
+        message: err.response?.data?.message || 'Registration failed.' 
+      });
       setSubmitting(false);
     }
   };

@@ -1,10 +1,12 @@
+// src/components/AuthComponents/SignIn/SignIn.jsx
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { loginUser } from '../../../services/authService';
+import { useAuth } from '../../../context/AuthContext'; // <-- LIVE AUTH
 import './SignIn.css';
 
 const SignIn = () => {
   const navigate = useNavigate();
+  const { signin } = useAuth(); // <-- Get signin function
   const [form, setForm] = useState({ email: '', password: '', remember: false });
   const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -27,18 +29,21 @@ const SignIn = () => {
     setAlert({ type: '', message: '' });
 
     try {
-      const res = await loginUser({ email: form.email, password: form.password });
-      if (res.success) {
-        setAlert({ type: 'success', message: '✅ Login successful! Redirecting...' });
-        // Store token (future: use context / secure cookie)
-        localStorage.setItem('token', res.token);
-        setTimeout(() => navigate(res.redirect || '/'), 1200);
-      } else {
-        setAlert({ type: 'error', message: `❌ ${res.message}` });
-        setSubmitting(false);
-      }
+      // Use real backend auth
+      const res = await signin(form.email, form.password);
+      
+      setAlert({ type: 'success', message: '✅ Login successful! Redirecting...' });
+      
+      // Redirect to correct dashboard based on role
+      const role = res.user.role;
+      setTimeout(() => navigate(`/${role}/dashboard`), 1200);
+
     } catch (err) {
-      setAlert({ type: 'error', message: '❌ Something went wrong.' });
+      // Catch backend error messages safely
+      setAlert({ 
+        type: 'error', 
+        message: `❌ ${err.response?.data?.message || 'Invalid credentials'}` 
+      });
       setSubmitting(false);
     }
   };

@@ -1,7 +1,8 @@
 // src/components/HomeComponents/Navbar/Navbar.jsx
 import { useState, useEffect, useRef } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { navLinks } from '../../../data/dummyData';
+import { useAuth } from '../../../context/AuthContext'; // <-- LIVE AUTH
 import './Navbar.css';
 
 export default function Navbar() {
@@ -9,6 +10,9 @@ export default function Navbar() {
   const menuRef = useRef(null);
   const btnRef = useRef(null);
   const location = useLocation();
+  const navigate = useNavigate();
+  
+  const { user, logout } = useAuth(); // <-- Get user state
 
   // Close mobile menu on route change
   useEffect(() => {
@@ -33,7 +37,6 @@ export default function Navbar() {
 
   const toggleMenu = () => setMobileOpen((prev) => !prev);
 
-  // Handle section smooth scroll if links are hash tags (e.g., #categories)
   const handleNavClick = (e, path) => {
     if (path.startsWith('#')) {
       e.preventDefault();
@@ -42,6 +45,12 @@ export default function Navbar() {
         el.scrollIntoView({ behavior: 'smooth' });
       }
     }
+  };
+
+  const handleLogout = () => {
+    logout();
+    setMobileOpen(false);
+    navigate('/');
   };
 
   return (
@@ -75,14 +84,27 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* Action Buttons */}
+        {/* Dynamic Action Buttons */}
         <div className="navbar-actions">
-          <Link to="/auth/signin" className="btn btn-ghost">
-            Sign In
-          </Link>
-          <Link to="/auth/signup" className="btn btn-primary">
-            Sign Up
-          </Link>
+          {user ? (
+            <>
+              <Link to={`/${user.role}/dashboard`} className="btn btn-ghost">
+                Dashboard
+              </Link>
+              <button onClick={handleLogout} className="btn btn-primary" style={{ border: 'none', cursor: 'pointer' }}>
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/auth/signin" className="btn btn-ghost">
+                Sign In
+              </Link>
+              <Link to="/auth/signup" className="btn btn-primary">
+                Sign Up
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile Toggle Button */}
@@ -125,12 +147,17 @@ export default function Navbar() {
           )
         ))}
         <div className="mobile-actions">
-          <Link to="/auth/signin" className="btn btn-secondary">
-            Sign In
-          </Link>
-          <Link to="/auth/signup" className="btn btn-primary">
-            Sign Up
-          </Link>
+          {user ? (
+            <>
+              <Link to={`/${user.role}/dashboard`} className="btn btn-ghost">Dashboard</Link>
+              <button onClick={handleLogout} className="btn btn-primary" style={{width: '100%'}}>Logout</button>
+            </>
+          ) : (
+            <>
+              <Link to="/auth/signin" className="btn btn-secondary">Sign In</Link>
+              <Link to="/auth/signup" className="btn btn-primary">Sign Up</Link>
+            </>
+          )}
         </div>
       </div>
     </nav>
