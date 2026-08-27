@@ -1,0 +1,122 @@
+/* ============================================================
+   NAVBAR BASE & LAYOUT (Inherited from Landing Page)
+============================================================ */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(229, 231, 235, 0.7);
+  height: 72px; /* Set defined height */
+}
+
+.navbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+}
+
+/* ============================================================
+   LOGO STYLES (Identical to Landing Page)
+============================================================ */
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--text, #111827); /* Graceful fallback if var is compiling */
+  letter-spacing: -0.5px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.navbar-logo .logo-img {
+  width: 35px;
+  height: 35px;
+  border-radius: 1px;
+}
+
+/* ============================================================
+   AUTH NAV SWITCHER & ACTIONS
+============================================================ */
+.auth-actions {
+  display: flex;
+  align-items: center;
+}
+
+.auth-switch-text {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-light, #6B7280);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Standardized actions buttons */
+.auth-actions .btn {
+  padding: 10px 22px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-actions .btn-primary {
+  background: var(--primary, #4F46E5);
+  color: #ffffff;
+  border: 1px solid transparent;
+}
+
+.auth-actions .btn-primary:hover {
+  background: var(--primary-dark, #4338CA);
+  transform: translateY(-1px);
+}
+
+.auth-actions .btn-ghost {
+  background: transparent;
+  color: var(--primary, #4F46E5);
+  border: 1px solid transparent;
+}
+
+.auth-actions .btn-ghost:hover {
+  background: var(--primary-light, #EEF2FF);
+  color: var(--primary-dark, #4338CA);
+}
+
+.auth-btn-login {
+  border: 1.5px solid var(--border, #E5E7EB) !important;
+}
+
+/* ============================================================
+   RESPONSIVE LAYOUT BREAKPOINTS
+============================================================ */
+@media (max-width: 768px) {
+  .navbar-container {
+    padding: 0 16px;
+  }
+}
+
+@media (max-width: 500px) {
+  /* Hides secondary static helper phrase on tiny viewports */
+  .hide-mobile {
+    display: none;
+  }
+  
+  .auth-actions .btn {
+    padding: 8px 14px;
+    font-size: 13px;
+    border-radius: 8px;
+  }
+}

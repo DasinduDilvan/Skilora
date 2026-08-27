@@ -1,3 +1,6 @@
+// src/components/HomeComponents/Categories/Categories.jsx
+import { useState, useEffect } from 'react';
+import API from '../../../api/axios'; // <-- LIVE API
 import { categoriesData } from '../../../data/dummyData';
 import useIntersectionObserver from '../../../hooks/useIntersectionObserver';
 import './Categories.css';
@@ -11,16 +14,40 @@ function CategoryCard({ item, delay }) {
       className={`category-card reveal${isVisible ? ' visible' : ''}`}
       style={{ transitionDelay: `${delay}ms` }}
     >
-      <div className={`category-icon ${item.iconClass}`}>{item.icon}</div>
+      <div className={`category-icon ${item.iconClass || 'cat-design'}`}>{item.icon || '📁'}</div>
       <h3>{item.title}</h3>
       <p>{item.description}</p>
-      <div className="category-count">{item.count}</div>
+      {/* Hide count if backend doesn't provide it yet */}
+      {item.count && <div className="category-count">{item.count}</div>}
     </div>
   );
 }
 
 export default function Categories() {
-  const { label, title, subtitle, items } = categoriesData;
+  const { label, title, subtitle, items: dummyItems } = categoriesData;
+  const [items, setItems] = useState(dummyItems); // Default to dummy
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await API.get('/categories?isActive=true');
+        if (res.data.data && res.data.data.length > 0) {
+          // Map backend schema to UI schema
+          const liveItems = res.data.data.slice(0, 8).map(c => ({
+            id: c.categoryId,
+            title: c.name,
+            description: c.description,
+            icon: c.icon || '🎨', // Fallback icon
+            iconClass: 'cat-design', // Fallback color class
+          }));
+          setItems(liveItems);
+        }
+      } catch (error) {
+        console.error("Failed to load live categories", error);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   return (
     <section className="section" id="categories">
