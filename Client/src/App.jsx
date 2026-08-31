@@ -2,6 +2,9 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Home from './pages/Home';
 import Auth from './pages/Auth';
+import Client from './pages/Client';
+import Freelancer from './pages/Freelancer';
+import Admin from './pages/Admin';
 import './App.css';
 
 function App() {
@@ -10,20 +13,21 @@ function App() {
       {/* Landing Page */}
       <Route path="/" element={<Home />} />
 
-      {/* Auth Main Route */}
+      {/* Auth Routes */}
       <Route path="/auth/:mode" element={<Auth />} />
       <Route path="/auth" element={<Navigate to="/auth/signin" replace />} />
-
-      {/* Aliases for direct /signin and /signup links */}
       <Route path="/signin" element={<Navigate to="/auth/signin" replace />} />
       <Route path="/signup" element={<Navigate to="/auth/signup" replace />} />
 
-      {/* Future routes (uncomment when created) */}
-      {/* 
-      <Route path="/projects" element={<Projects />} />
-      <Route path="/freelancers" element={<Freelancers />} />
-      <Route path="/how-it-works" element={<HowItWorksPage />} /> 
-      */}
+      {/* Role-Based Routes */}
+      <Route path="/client/:section" element={<Client />} />
+      <Route path="/client" element={<Navigate to="/client/dashboard" replace />} />
+
+      <Route path="/freelancer/:section" element={<Freelancer />} />
+      <Route path="/freelancer" element={<Navigate to="/freelancer/dashboard" replace />} />
+
+      <Route path="/admin/:section" element={<Admin />} />
+      <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
 
       {/* Catch-all fallback */}
       <Route path="*" element={<Navigate to="/" replace />} />

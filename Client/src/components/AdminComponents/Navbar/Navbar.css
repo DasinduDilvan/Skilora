@@ -1,0 +1,179 @@
+/* ============================================================
+   ADMIN NAVBAR — Dark theme, single-line (7 links)
+============================================================ */
+.admin-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: #1e293b;
+  border-bottom: 1px solid #334155;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+}
+
+.admin-navbar-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 68px;
+  gap: 20px;
+}
+
+.admin-navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #fff;
+  flex-shrink: 0;
+}
+.admin-navbar-logo .logo-img {
+  width: 32px;
+  height: 32px;
+  border-radius: 2px;
+}
+.admin-tag {
+  font-size: 11px;
+  background: #ef4444;
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-left: 4px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.admin-navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  flex: 1;
+  justify-content: center;
+}
+.admin-navbar-links a {
+  font-size: 14px;
+  font-weight: 500;
+  color: #cbd5e1;
+  padding: 6px 2px;
+  position: relative;
+  transition: color 0.2s;
+  white-space: nowrap;
+}
+.admin-navbar-links a:hover,
+.admin-navbar-links a.active {
+  color: #fff;
+}
+.admin-navbar-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: #3b82f6;
+  transition: width 0.3s;
+}
+.admin-navbar-links a:hover::after,
+.admin-navbar-links a.active::after {
+  width: 100%;
+}
+
+.admin-navbar-user {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.admin-navbar-user .user-greet {
+  font-size: 14px;
+  color: #cbd5e1;
+  font-weight: 500;
+}
+.admin-navbar-user .btn-logout {
+  padding: 8px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  background: #ef4444;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.admin-navbar-user .btn-logout:hover {
+  background: #dc2626;
+}
+
+.admin-mobile-btn {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+}
+.admin-mobile-btn:hover { background: #334155; }
+.admin-mobile-btn .hamburger {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.admin-mobile-btn .hamburger span {
+  display: block;
+  width: 24px;
+  height: 2.5px;
+  background: #fff;
+  border-radius: 2px;
+  transition: all 0.3s;
+}
+.admin-mobile-btn.active .hamburger span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+.admin-mobile-btn.active .hamburger span:nth-child(2) { opacity: 0; }
+.admin-mobile-btn.active .hamburger span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+.admin-mobile-menu {
+  display: none;
+  position: fixed;
+  top: 68px;
+  left: 0;
+  right: 0;
+  background: #1e293b;
+  border-bottom: 1px solid #334155;
+  padding: 16px 24px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  z-index: 999;
+}
+.admin-mobile-menu.active { display: block; }
+.admin-mobile-menu a {
+  display: block;
+  padding: 12px 16px;
+  color: #cbd5e1;
+  font-weight: 500;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+.admin-mobile-menu a:hover,
+.admin-mobile-menu a.active {
+  background: #334155;
+  color: #fff;
+}
+.admin-mobile-menu .btn-logout.mobile {
+  width: 100%;
+  margin-top: 16px;
+  padding: 12px;
+  background: #ef4444;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+@media (max-width: 1024px) {
+  .admin-navbar-links,
+  .admin-navbar-user {
+    display: none;
+  }
+  .admin-mobile-btn { display: flex; }
+}
