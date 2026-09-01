@@ -1,12 +1,12 @@
 // src/components/AuthComponents/SignIn/SignIn.jsx
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../../context/AuthContext'; // <-- LIVE AUTH
+import { useAuth } from '../../../context/AuthContext';
 import './SignIn.css';
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const { signin } = useAuth(); // <-- Get signin function
+  const { signin } = useAuth();
   const [form, setForm] = useState({ email: '', password: '', remember: false });
   const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -29,20 +29,31 @@ const SignIn = () => {
     setAlert({ type: '', message: '' });
 
     try {
-      // Use real backend auth
       const res = await signin(form.email, form.password);
+      
+      // Safely extract role
+      const role = res?.user?.role || res?.role || 'client';
       
       setAlert({ type: 'success', message: '✅ Login successful! Redirecting...' });
       
-      // Redirect to correct dashboard based on role
-      const role = res.user.role;
-      setTimeout(() => navigate(`/${role}/dashboard`), 1200);
+      // Immediate navigate to client dashboard
+      setTimeout(() => {
+        if (role === 'client') {
+          navigate('/client/dashboard', { replace: true });
+        } else if (role === 'freelancer') {
+          navigate('/freelancer/dashboard', { replace: true });
+        } else if (role === 'admin') {
+          navigate('/admin/dashboard', { replace: true });
+        } else {
+          navigate('/', { replace: true });
+        }
+      }, 400);
 
     } catch (err) {
-      // Catch backend error messages safely
+      console.error("Login error:", err);
       setAlert({ 
         type: 'error', 
-        message: `❌ ${err.response?.data?.message || 'Invalid credentials'}` 
+        message: `❌ ${err.response?.data?.message || err.message || 'Invalid credentials'}` 
       });
       setSubmitting(false);
     }
@@ -50,7 +61,7 @@ const SignIn = () => {
 
   return (
     <div className="signin-page-wrap">
-      {/* LEFT */}
+      {/* LEFT PANEL */}
       <div className="signin-left-panel">
         <div className="lp-icon">🔐</div>
         <h2>Welcome Back to Skillora</h2>
@@ -67,7 +78,7 @@ const SignIn = () => {
         </div>
       </div>
 
-      {/* RIGHT */}
+      {/* RIGHT PANEL */}
       <div className="signin-right-panel">
         <div className="form-header">
           <h2>Log In</h2>
@@ -87,6 +98,7 @@ const SignIn = () => {
               value={form.email}
               onChange={handleChange}
               placeholder="youremail@example.com"
+              required
             />
           </div>
 
@@ -99,6 +111,7 @@ const SignIn = () => {
                 value={form.password}
                 onChange={handleChange}
                 placeholder="Enter your password"
+                required
               />
               <button
                 type="button"
